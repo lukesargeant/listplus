@@ -1,0 +1,39 @@
+{
+    "name": "listplus",
+    "title": "Listplus",
+    "description": "Light weight jQuery plugin to add sorting, grouping and filtering to html lists.",
+    "keywords": [
+        "ul",
+        "li",
+        "list",
+        "grid",
+        "sort",
+        "group",
+        "filter"
+    ],
+    "version": "0.9.0",
+    "author": {
+        "name": "Luke Sargeant",
+        "url": "https://github.com/lukesargeant"
+    },
+    "maintainers": [
+        {
+            "name": "Luke Sargeant",
+            "email": "lukesarge@gmail.com",
+            "url": "https://github.com/lukesargeant"
+        }
+    ],
+    "licenses": [
+        {
+            "type": "MIT",
+            "url": "https://github.com/lukesargeant/listplus/license.txt"
+        }
+    ],
+    "bugs": "https://github.com/lukesargeant/listplus/issues",
+    "homepage": "https://lukesargeant.com/jquery/listplus/demo.html",
+    "docs": "https://lukesargeant.com/jquery/listplus/demo.html",
+    "dependencies": {
+        "jquery": ">=1.9",
+        "jqueryUI": ">=1.10"
+    }
+}
