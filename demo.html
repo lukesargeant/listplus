@@ -38,11 +38,6 @@ $(function() {
 
 	$('#example5').on('click',function(event) {
 		$('#mylist').listplus('destroy');
-		$('#mylist').listplus({'sortBy':['reverse .lastname']});
-	});
-
-	$('#example6').on('click',function(event) {
-		$('#mylist').listplus('destroy');
 		$('#mylist').listplus({
 			'filterBy': ["Pop","Riv","Sh"],
 			'sortBy': [{
@@ -66,8 +61,7 @@ $(function() {
 		<code id="example2">groupBy: ".lastname"</code>
 		<code id="example3">filterBy: ["Riv"]</code>
 		<code id="example4">hideList: [".lastname"]</code>
-		<code id="example5">sortBy:["reverse .lastname"]</code>
-		<code id="example6">$('#mylist').listplus({
+		<code id="example5">$('#mylist').listplus({
 	'filterBy': ["Pop","Riv","Sh"],
 	'sortBy': [function(li) {return $(li).data("listplus-filterscore")}]
 });</code>
