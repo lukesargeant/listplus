@@ -66,7 +66,6 @@
 			var widget = this;
 			if ($.type(sortArr)==="string" || $.type(sortArr)==="object" || $.type(sortArr)==="function")  sortArr = [sortArr];
 			if ($.type(sortArr)==="array") {
-				sortArr.reverse();
 				for (var i=0;i<sortArr.length;i++) {
 					widget._sort(sortArr[i],widget.element);
 				}
