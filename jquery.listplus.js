@@ -40,11 +40,13 @@
 
 		filterBy: function(filterArr) {
 			var widget = this;
+			var $listitems = widget.element.children();
+			
+			//Reset any previously assigned filter scores
+			$listitems.data('listplus-filterscore',0);
+			
 			if ($.type(filterArr)==="string")  filterArr = [filterArr];
-			if ($.type(filterArr)==="array" && filterArr.length>0) {
-				var $listitems = widget.element.children();
-				//Reset any previously assigned filter scores
-				$listitems.data('listplus-filterscore',0);
+			if ($.type(filterArr)==="array") {
 				//iterate through filters and score items
 				for (var i=0;i<filterArr.length;i++) {
 					$listitems.filter(':icontains("'+filterArr[i]+'")').each(function() {
@@ -53,11 +55,13 @@
 						$this.data('listplus-filterscore',newScore);
 					});
 				}
-				//hide items with a filter score of 0
-				$listitems.each(function() {
-					var $this = $(this)
-					if ($this.data('listplus-filterscore')===0) $this.addClass('ui-hidden');
-				});
+				//hide items with a filter score of 0 if we've done any filtering
+				if (filterArr.length>0) {
+					$listitems.each(function() {
+						var $this = $(this)
+						if ($this.data('listplus-filterscore')===0) $this.addClass('ui-hidden');
+					});
+				}
 			}
 			//TODO: hide empty groups unless in persistent groups.
 		},
