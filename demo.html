@@ -35,14 +35,30 @@ $(function() {
 		$('#mylist').listplus('destroy');
 		$('#mylist').listplus({'hideList':['.lastname']});
 	});
+
+	$('#example5').on('click',function(event) {
+		$('#mylist').listplus('destroy');
+		$('#mylist').listplus({'sortBy':['reverse .lastname']});
+	});
+
+	$('#example6').on('click',function(event) {
+		$('#mylist').listplus('destroy');
+		$('#mylist').listplus({
+			'filterBy': ["Pop","Riv","Sh"],
+			'sortBy': [{
+				sortValue: function(li) {return $(li).data("listplus-filterscore")},
+				reverse: true
+			}]
+		});
+	});
 });
 </script>
 </head>
 <body>
 <header>
 	<h1><span class="sitback">&lt;script src="</span>jquery.listplus.js<span class="sitback">"&gt;&lt;/script&gt;</span></h1>
-	<p>There once was a simple html list that required client side sorting.</p>
-	<p>Then it needed a filter then grouping then some animations and then my code was a bit of a mess...</p>
+	<p>There was once a simple html list that required client side sorting.</p>
+	<p>Then it needed filtering, then grouping, then some animations and then all that code was a bit of a mess...</p>
 	<p>Listplus wraps these functions in a lightweight jQueryUI widget.</p>
 	<div id="controls">
 		<h2>try: </h2>
@@ -50,53 +66,58 @@ $(function() {
 		<code id="example2">groupBy: ".lastname"</code>
 		<code id="example3">filterBy: ["Riv"]</code>
 		<code id="example4">hideList: [".lastname"]</code>
+		<code id="example5">sortBy:["reverse .lastname"]</code>
+		<code id="example6">$('#mylist').listplus({
+	'filterBy': ["Pop","Riv","Sh"],
+	'sortBy': [function(li) {return $(li).data("listplus-filterscore")}]
+});</code>
 	</div>
 </header>
 
 <div id="main">
 
-	<ul id="mylist">
-		<li>
+	<ul id="mylist" class="touchlist">
+		<li data-id="0">
 			<p><span class="firstname">Paul</span> <span class="lastname">Pheonix</span></p>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="1">
 			<span class="firstname">John</span> <span class="lastname">Pheonix</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="2">
 			<span class="firstname">Misty</span> <span class="lastname">Rivers</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="3">
 			<span class="firstname">Poppy</span> <span class="lastname">Rivers</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="4">
 			<span class="firstname">Jeffrey</span> <span class="lastname">Sinclair</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="5">
 			<span class="firstname">John</span> <span class="lastname">Sheridan</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="6">
 			<span class="firstname">Lyta</span> <span class="lastname">Alexanda</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="7">
 			<span class="firstname">Londo</span> <span class="lastname">Mollari</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="8">
 			<span class="firstname">Marcus</span> <span class="lastname">Pheonix</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="9">
 			<span class="firstname">Thomas</span> <span class="lastname">Ivonova</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>
-		<li>
+		<li data-id="10">
 			<span class="firstname">Susan</span> <span class="lastname">Ivonova</span>
 			<p class="dateofbirth">born: 25th April 1998</p>
 		</li>

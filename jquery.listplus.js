@@ -1,5 +1,8 @@
 /* jQuery Listplus widget by Luke Sargeant (Abraxsi) lukesarge@gmail.com */
-(function(jQuery) {
+(function($) {
+	$.expr[':'].icontains = function(obj, index, meta, stack){
+		return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
+	};
 	$.widget("widgetplus.listplus", {
 		version: "0.9.0",
 		options: {
@@ -7,9 +10,7 @@
 			groupBy: null,
 			hideList: null,
 			persistentGroups: null,
-			preventDuplicates: null,
 			sortBy: null,
-			sortFunction: "alphabetic",
 			ungroupableItemGroup: "Misc."
 		},
 		
@@ -24,91 +25,136 @@
 		refresh: function() {
 			var widget = this;
 			//Show html previously hidden
-			widget.element.find('.ui-helper-hidden-accessible').removeClass('ui-helper-hidden-accessible');
+			widget.element.find('.ui-hidden').removeClass('ui-hidden');
 			//Ungroup
 			widget._ungroup();
+			//Filter
+			if (widget.options.filterBy) widget.filterBy(widget.options.filterBy);
 			//Sort
-			var sortArr = widget.options.sortBy;
-			if ($.type(sortArr)==="string")  sortArr = [sortArr];
+			if (widget.options.sortBy) widget.sortBy(widget.options.sortBy);
+			//Group
+			if (widget.options.groupBy) widget.groupBy(widget.options.groupBy);
+			//Hide html that matches hideList
+			if (widget.options.hideList) widget.hideList(widget.options.hideList);
+		},
+
+		filterBy: function(filterArr) {
+			var widget = this;
+			if ($.type(filterArr)==="string")  filterArr = [filterArr];
+			if ($.type(filterArr)==="array" && filterArr.length>0) {
+				var $listitems = widget.element.children();
+				//Reset any previously assigned filter scores
+				$listitems.data('listplus-filterscore',0);
+				//iterate through filters and score items
+				for (var i=0;i<filterArr.length;i++) {
+					$listitems.filter(':icontains("'+filterArr[i]+'")').each(function() {
+						var $this = $(this)
+						var newScore = $this.data('listplus-filterscore') + 1;
+						$this.data('listplus-filterscore',newScore);
+					});
+				}
+				//hide items with a filter score of 0
+				$listitems.each(function() {
+					var $this = $(this)
+					if ($this.data('listplus-filterscore')===0) $this.addClass('ui-hidden');
+				});
+			}
+			//TODO: hide empty groups unless in persistent groups.
+		},
+
+		sortBy: function(sortArr) {
+			var widget = this;
+			if ($.type(sortArr)==="string" || $.type(sortArr)==="object" || $.type(sortArr)==="function")  sortArr = [sortArr];
 			if ($.type(sortArr)==="array") {
 				sortArr.reverse();
 				for (var i=0;i<sortArr.length;i++) {
 					widget._sort(sortArr[i],widget.element);
 				}
 			}
-			//Group
-			if (widget.options.groupBy) widget._group();
-			//Hide html that matches hideList
-			var hideArr = widget.options.hideList;
-			if ($.type(hideArr)==="string")  hideArr = [hideArr];
-			if ($.type(hideArr)==="array") {
-				for (var i=0;i<hideArr.length;i++) {
-					widget.element.find(hideArr[i]).addClass('ui-helper-hidden-accessible');
-				}
-			}
-			//Filter
-			var filterArr = widget.options.filterBy;
-			if ($.type(filterArr)==="string")  filterArr = [filterArr];
-			if ($.type(filterArr)==="array") {
-				widget.element.children().not('.listplus-heading').addClass('ui-helper-hidden-accessible');
-				for (var i=0;i<filterArr.length;i++) {
-					widget.element.children(':contains("'+filterArr[i]+'")').removeClass('ui-helper-hidden-accessible');
-				}
-			}
 		},
-		
-		pushItems: function(listitems) {
+
+		_sort: function(sortOb,$context) {
 			var widget = this;
-			var $li = $(listitems).hide().addClass('listplus-adding');
-			widget.element.append($li);
-			widget.refresh();
-			widget.element.find('.listplus-adding').slideDown(200).promise().done(function() {
-				widget.element.find('.listplus-adding').removeClass('listplus-adding');
-			});
-		},
-		
-		removeItem: function(selector) {
-			var widget = this;
-			var $listitem = widget.element.find(selector).closest('li');
-			$listitem.addClass('listplus-removing').slideUp(200).promise().done(function() {
-				$listitem.remove();
-				widget._checkForEmptyGroups();
-			});
-		},
-		
-		_sort: function(selector,$context) {
-			var widget = this;
-			var thisSortFunction;
-			//pick sort function
-			if ($.type(widget.options.sortFunction)==="function") thisSortFunction = widget.options.sortFunction;
-			else if (widget.options.sortFunction==="numeric") thisSortFunction = widget._sortAlphabetic;
-			else if (widget.options.sortFunction==="alphabetic") thisSortFunction = widget._sortAlphabetic;
-			//do sort
+			
 			var sortingArray = [];
-			var $nodes = $context.children();
-		    $nodes.each(function() {	
-		        sortingArray.push([this,$(this).find(selector)]);//create DOM object/sort value pairs.
-		    });
-		    sortingArray.sort(thisSortFunction);
+			var reverse = false;
+			$context.children().each(function() {
+		    	//calc sort value
+		    	var thisSortValue = "";
+		    	if ($.type(sortOb)==="object") {
+		    		reverse = sortOb.reverse;
+		    		sortOb = sortOb.sortValue;
+				}
+				if ($.type(sortOb)==="function") thisSortValue = sortOb(this);
+				else thisSortValue = $(this).find(sortOb).text();
+				//create DOM object/sort value pairs.
+		        sortingArray.push([this,thisSortValue]);
+		    })
+
+		    //decide sort function
+			var sortFunction = widget._sortAlphabetic;
+			if (sortingArray.length>0 && $.type(sortingArray[0][1])==="number") {
+				//first value is numeric
+				sortFunction = reverse ? widget._sortReverseNumeric : widget._sortNumeric;
+			}
+			else {
+				sortFunction = reverse ? widget._sortReverseAlphabetic : widget._sortAlphabetic;
+			}
+
+			//do sort
+		    var sortingArray = this._mergeSort(sortingArray,sortFunction);
+		    //reorder in dom
 		    for (var i=0;i<sortingArray.length;i++) {
 		    	$context.append(sortingArray[i][0]);
 		    }
 		},
+
+		_mergeSort: function(array,comparison) {
+			if (array.length < 2) return array;
+			var middle = Math.ceil(array.length/2);
+			return this._merge(this._mergeSort(array.slice(0,middle),comparison),this._mergeSort(array.slice(middle),comparison),comparison);
+		},
+
+		_merge: function(left,right,comparison) {
+			var result = new Array();
+			while ((left.length > 0) && (right.length > 0)) {
+				if (comparison(left[0],right[0]) <= 0) result.push(left.shift());
+				else result.push(right.shift());
+			}
+			while (left.length > 0) result.push(left.shift());
+			while (right.length > 0) result.push(right.shift());
+			return result;
+		},
 		
 		_sortAlphabetic: function(a,b){
-			if (b[1].text()=='') return -1;
-			if (a[1].text()=='') return 1;
-			if (a[1].text().toLowerCase() < b[1].text().toLowerCase()) return -1;
-		    if (a[1].text().toLowerCase() > b[1].text().toLowerCase()) return 1;
+			if (!b[1]) return -1;
+			if (!a[1]) return 1;
+			if (a[1] < b[1]) return -1;
+		    if (a[1] > b[1]) return 1;
 		    return 0;
 		},
-		
-		_sortNumeric: function(a,b){
-			if (b[1].attr('numbersortvalue')==='') return -1;
-			if (a[1].attr('numbersortvalue')==='') return 1;
-		    return a[1].attr('numbersortvalue') - b[1].attr('numbersortvalue');
+
+		_sortReverseAlphabetic: function(a,b){
+			if (!b[1]) return -1;
+			if (!a[1]) return 1;
+			if (a[1] < b[1]) return 1;
+		    if (a[1] > b[1]) return -1;
+		    return 0;
 		},
-		
+
+		_sortNumeric: function(a,b){
+		    return a[1] - b[1];
+		},
+
+		_sortReverseNumeric: function(a,b){
+		    return b[1] - a[1];
+		},
+
+		groupBy: function(groupArr) {
+			var widget = this;
+			widget._group();
+		},
+
 		_group: function() {
 			var widget = this;
 			//create persistent groups
@@ -137,16 +183,40 @@
 			//place list item
 			widget.element.append(listitem);
 		},
-		
+
 		_ungroup: function() {
 			var widget = this;
 			//clear previously rendered groups
 			widget.element.children('.listplus-heading').remove();
 		},
-		
-		_checkForEmptyGroups: function() {
+
+		hideList: function(hideArr) {
 			var widget = this;
-			//TODO: remove empty groups unless in persistent groups.
+			if ($.type(hideArr)==="string")  hideArr = [hideArr];
+			if ($.type(hideArr)==="array") {
+				for (var i=0;i<hideArr.length;i++) {
+					widget.element.find(hideArr[i]).addClass('ui-hidden');
+				}
+			}
+		},
+		
+		pushItems: function(listitems) {
+			var widget = this;
+			var $li = $(listitems).hide().addClass('listplus-adding');
+			widget.element.append($li);
+			widget.refresh();
+			widget.element.find('.listplus-adding').slideDown(200).promise().done(function() {
+				widget.element.find('.listplus-adding').removeClass('listplus-adding');
+			});
+		},
+		
+		removeItem: function(selector) {
+			var widget = this;
+			var $listitem = widget.element.find(selector).closest('li');
+			$listitem.addClass('listplus-removing').slideUp(200).promise().done(function() {
+				$listitem.remove();
+				widget._checkForEmptyGroups();
+			});
 		},
 		
 		_destroy: function() {
@@ -167,4 +237,4 @@
 			this._super(key,value);
 		}
 	});
-})();
+})(jQuery);

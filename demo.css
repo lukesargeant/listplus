@@ -1,3 +1,6 @@
+.ui-hidden {
+	display: none;
+}
 body {
 	background: #D3DB00;
 	font-family: Arial;
@@ -16,18 +19,6 @@ header h1 .sitback {
 header p {
 	font-size: 17px;
 	margin: 5px 0;
-}
-li {
-	background: rgba(255,255,255,0.9);
-	padding: 10px;
-	margin-bottom: 1px;
-}
-li p {
-	margin: 0;
-}
-li p.dateofbirth {
-	color: #0F97AA;
-	font-size: small;
 }
 button {
 	background: rgba(0,0,0,0.85);
@@ -55,6 +46,7 @@ button:hover {
 	padding: 10px;
 	float: left;
 	margin: 5px 10px;
+	white-space: pre;
 }
 #controls code:hover {
 	padding-bottom: 6px;
@@ -68,7 +60,23 @@ button:hover {
 #main {
 	padding: 0 10px;
 }
-.listplus-heading {
+/* Touch list */
+ul.touchlist {
+
+}
+ul.touchlist li {
+	background: rgba(255,255,255,0.9);
+	padding: 10px;
+	margin-bottom: 1px;
+}
+ul.touchlist li p {
+	margin: 0;
+}
+ul.touchlist li p.dateofbirth {
+	color: #0F97AA;
+	font-size: small;
+}
+ul.touchlist .listplus-heading {
 	margin: 10px 0 1px;
 	list-style: none;
 	background: rgba(255, 255, 255, 0.6);
@@ -76,6 +84,11 @@ button:hover {
 	font-size: smaller;
 	padding: 5px 10px;
 }
-.ui-helper-hidden-accessible {
-	display: none;
+/* Tag list */
+ul.taglist {
+	background: white;
+	
+}
+ul.taglist li {
+	
 }
