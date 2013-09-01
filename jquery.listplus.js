@@ -1,12 +1,11 @@
 /* jQuery Listplus widget by Luke Sargeant (Abraxsi) lukesarge@gmail.com */
 (function($) {
-	$.expr[':'].icontains = function(obj, index, meta, stack){
-		return (obj.textContent || obj.innerText || jQuery(obj).text() || '').toLowerCase().indexOf(meta[3].toLowerCase()) >= 0;
-	};
 	$.widget("widgetplus.listplus", {
 		version: "0.9.0",
 		options: {
 			filterBy: null,
+			filterMode: "loose", //possible args: loose, strict
+			filterTransform: "[^\\w ]",
 			groupBy: null,
 			hideList: null,
 			persistentGroups: null,
@@ -41,7 +40,7 @@
 		filterBy: function(filterArr) {
 			var widget = this;
 			var $listitems = widget.element.children();
-			
+			var transform = new RegExp(this.options.filterTransform,"g");
 			//Reset any previously assigned filter scores
 			$listitems.data('listplus-filterscore',0);
 			
@@ -49,17 +48,25 @@
 			if ($.type(filterArr)==="array") {
 				//iterate through filters and score items
 				for (var i=0;i<filterArr.length;i++) {
-					$listitems.filter(':icontains("'+filterArr[i]+'")').each(function() {
-						var $this = $(this)
-						var newScore = $this.data('listplus-filterscore') + 1;
-						$this.data('listplus-filterscore',newScore);
+					$listitems.each(function() {
+						var $this = $(this);
+						var filterTerm = filterArr[i].toLowerCase().replace(transform,"");
+						var filterRow = $this.text().toLowerCase().replace(transform,"");
+						if (filterRow.indexOf(filterTerm)>=0) {
+							var newScore = $this.data('listplus-filterscore') + 1;
+							$this.data('listplus-filterscore',newScore);
+						}
 					});
 				}
-				//hide items with a filter score of 0 if we've done any filtering
-				if (filterArr.length>0) {
+				//hide filtered list items
+				var numberOfFilterWords = filterArr.length;
+				if (numberOfFilterWords>0) {
+					var requiredScore = widget.options.filterMode==="strict" ? numberOfFilterWords : 1;
 					$listitems.each(function() {
-						var $this = $(this)
-						if ($this.data('listplus-filterscore')===0) $this.addClass('ui-hidden');
+						var $this = $(this);
+						if ($this.data('listplus-filterscore')<requiredScore) {
+							$this.addClass('ui-hidden');
+						} 
 					});
 				}
 			}
