@@ -1,7 +1,7 @@
 {
     "name": "listplus",
     "title": "Listplus",
-    "description": "Light weight jQuery plugin to add sorting, grouping and filtering to html lists.",
+    "description": "An unintrusive jQuery plugin that adds multi value stable sorting, grouping and multi-word filtering to an element's child nodes. The plugin does not change or style your dom elements, nor does it keep track of ordering between render cycles making it very easy to plug in to existing code without it needing to be re-written to accomodate the plugin.",
     "keywords": [
         "ul",
         "li",
