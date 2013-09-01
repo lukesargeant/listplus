@@ -6,6 +6,7 @@ body {
 	font-family: Arial;
 	margin: 0;
 	padding: 0;
+	max-width: 920px;
 }
 header {
 	padding: 35px 50px 10px;
@@ -18,7 +19,6 @@ header h1 .sitback {
 }
 header p {
 	font-size: 17px;
-	margin: 5px 0;
 }
 button {
 	background: rgba(0,0,0,0.85);
