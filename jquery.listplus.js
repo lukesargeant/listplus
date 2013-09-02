@@ -160,7 +160,7 @@
 		    return b[1] - a[1];
 		},
 
-		groupBy: function(groupArr) {
+		groupBy: function() {
 			var widget = this;
 			widget._group();
 		},
