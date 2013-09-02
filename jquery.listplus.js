@@ -1,7 +1,7 @@
 /* jQuery Listplus widget by Luke Sargeant (Abraxsi) lukesarge@gmail.com */
 (function($) {
 	$.widget("widgetplus.listplus", {
-		version: "0.9.1",
+		version: "0.9.0",
 		options: {
 			filterBy: null,
 			filterMode: "loose", //possible args: loose, strict

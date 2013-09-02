@@ -1,17 +1,15 @@
 {
     "name": "listplus",
     "title": "Listplus",
-    "description": "Adds multi-field stable sorting, grouping/group header generation and multi-word filtering over an element's child nodes (usually applied to a ul, ol or div). The plugin does not change or style your dom elements except for creating group headings, nor does it keep track of ordering between render cycles meaning it plays nice with other code that may exist already on the list.",
+    "description": "An unintrusive jQuery plugin that adds multi value stable sorting, grouping and multi-word filtering to an element's child nodes. The plugin does not change or style your dom elements, nor does it keep track of ordering between render cycles making it very easy to plug in to existing code without it needing to be re-written to accomodate the plugin.",
     "keywords": [
         "ul",
         "li",
         "list",
         "grid",
-        "stable",
         "sort",
         "group",
-        "filter",
-        "multi"
+        "filter"
     ],
     "version": "0.9.0",
     "author": {
@@ -32,8 +30,8 @@
         }
     ],
     "bugs": "https://github.com/lukesargeant/listplus/issues",
-    "homepage": "http://lukesargeant.com/jquery/listplus/demo.html",
-    "docs": "http://lukesargeant.com/jquery/listplus/api-0.9.0.html",
+    "homepage": "https://lukesargeant.com/jquery/listplus/demo.html",
+    "docs": "https://lukesargeant.com/jquery/listplus/demo.html",
     "dependencies": {
         "jquery": ">=1.9",
         "jqueryUI": ">=1.10"
