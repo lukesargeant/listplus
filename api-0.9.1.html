@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Listplus API v0.9.0</title>
+<link rel="stylesheet" type="text/css" href="demo.css" />
+<script src="jquery-1.9.1.js"></script>
+<script src="jquery-ui-1.10.3.custom.js" ></script>
+<script src="jquery.listplus.js"></script>
+<script >
+$(function() {
+	$('#api').listplus({'sortBy':['.lastname']});
+});
+</script>
+</head>
+<body>
+<header>
+	<h1>Listplus version 0.9.0 API</h1>
+	<p></p>
+</header>
+
+<style>
+body {
+	font-size: 13px;
+}
+ul.apilist {
+	list-style: none;
+	padding: 0;
+}
+ul.apilist li {
+	position: relative;
+	overflow: auto;
+	background: rgba(255,255,255,0.75);
+	margin-bottom: 1px;
+	padding: 0 24px;
+}
+ul.apilist aside {
+	position: absolute;
+	top: 0;
+	right: 0;
+	padding:24px;
+	font-style: italic;
+}
+ul.apilist h1{
+	font-weight: normal;
+}
+ul.apilist p {
+	color: #3F3F3F;
+}
+</style>
+
+<div id="main">
+
+	<ul id="api" class="apilist">
+		<li data-category="options">
+			<h1>filterBy</h1>
+			<aside>default: null</aside>
+			<p>String: Filter list items by the given string. Applies a class of ui-hidden to all list items that do not contain the filter string.</p>
+			<p>Array: an array of strings to filter the list items by.</p>
+			<p>Note: during filtering a jQuery data value is set against each list item called filter-score that can be accessed during sorting which can be useful during filterMode: "loose" filtering to order list items by relevance.</p>
+		</li>
+		<li data-category="options">
+			<h1>filterMode</h1>
+			<aside>default: "loose"</aside>
+			<p>String: Possible values are 'loose' and 'strict'. In strict mode, a list item must match all filter strings in a filter array to remain displayed. In loose mode, the list item must only contain a single filter term to remain shown.</p>
+		</li>
+		<li data-category="options">
+			<h1>filterTransform</h1>
+			<aside>default: "[^\\w ]"</aside>
+			<p>String: A regular expression that matches text to be removed from both the filter text and each list item before they are checked for a match. By default this removes anything that isn't a letter or a number and a few other symbols, but most symbols like colons or question marks will be removed.</p>
+		</li>
+		<li data-category="options">
+			<h1>groupBy</h1>
+			<aside>default: null</aside>
+			<p>String: A jQuery selector whose text is used to generate and determine a group for each row.</p>
+		</li>
+		<li data-category="options">
+			<h1>hideList</h1>
+			<aside>default: null</aside>
+			<p>Array: An array of jQuery selectors that match elements that should be hidden within rows. This is useful if the list has been grouped and it is unnecessary to display the group label on each row. It is also useful where you may give users the option to configure the list items to only show certain fields within a dataset.</p>
+		</li>
+		<li data-category="options">
+			<h1>persistentGroups</h1>
+			<aside>default: null</aside>
+			<p>Array: A list of group headings that should be generated when grouping, regardless of whether any list items actually belong within any of the specified groups. Useful if you want to make it explicit that a certain group has no members.</p>
+		</li>
+		<li data-category="options">
+			<h1>sortBy</h1>
+			<aside>default: null</aside>
+			<p>String: A jQuery selector whose matching element's text is used to sort the list alphabetically.</p>
+			<p>Function: A function that that is passed the each list element and returns a sort value.</p>
+			<p>Object: An object describing a sort. Options are sortValue (selector/Function) and reverse (true/false)</p>
+			<p>Array: An array of String selectors, functions and/or objects to use for composite sorting.</p>
+			<p>Note: when using a function or an object with a function, if the value is $.type === 'number' then a numeric sort function will be used.</p>
+		</li>
+		<li data-category="options">
+			<h1>upgroupableItemGroup</h1>
+			<aside>default: "Misc."</aside>
+			<p>String: The label given to a group that is created if the groupBy selector does not provide a suitable group name for a list item.</p>
+		</li>
+	</ul>
+
+</div>
+</body>
+</html>
