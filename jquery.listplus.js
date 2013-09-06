@@ -1,10 +1,10 @@
 /* jQuery Listplus widget by Luke Sargeant (Abraxsi) lukesarge@gmail.com */
 (function($) {
 	$.widget("widgetplus.listplus", {
-		version: "0.9.1",
+		version: "1.0.0",
 		options: {
 			filterBy: null,
-			filterMode: "loose", //possible args: loose, strict
+			filterMode: "loose", //possible args: loose, strict, best
 			filterTransform: "[^\\w ]",
 			groupBy: null,
 			hideList: null,
@@ -46,6 +46,7 @@
 			
 			if ($.type(filterArr)==="string")  filterArr = [filterArr];
 			if ($.type(filterArr)==="array") {
+				var bestScore = 0;
 				//iterate through filters and score items
 				for (var i=0;i<filterArr.length;i++) {
 					$listitems.each(function() {
@@ -55,13 +56,18 @@
 						if (filterRow.indexOf(filterTerm)>=0) {
 							var newScore = $this.data('listplus-filterscore') + 1;
 							$this.data('listplus-filterscore',newScore);
+							if (newScore > bestScore) bestScore = newScore;
 						}
 					});
 				}
 				//hide filtered list items
 				var numberOfFilterWords = filterArr.length;
 				if (numberOfFilterWords>0) {
-					var requiredScore = widget.options.filterMode==="strict" ? numberOfFilterWords : 1;
+					
+					var requiredScore = 1;
+					if (widget.options.filterMode==="strict") requiredScore = numberOfFilterWords;
+					else if (widget.options.filterMode==="best") requiredScore = bestScore;
+					
 					$listitems.each(function() {
 						var $this = $(this);
 						if ($this.data('listplus-filterscore')<requiredScore) {
@@ -69,6 +75,7 @@
 						} 
 					});
 				}
+				widget._trigger("filter", null, {});
 			}
 			//TODO: hide empty groups unless in persistent groups.
 		},
@@ -80,6 +87,7 @@
 				for (var i=0;i<sortArr.length;i++) {
 					widget._sort(sortArr[i],widget.element);
 				}
+				widget._trigger("sort", null, {});
 			}
 		},
 
@@ -177,6 +185,7 @@
 			widget.element.children('li').not('.listplus-heading').each(function() {
 				widget._placeInGroup(this);
 			});
+			widget._trigger("group", null, {});
 		},
 		
 		_placeInGroup: function(listitem) {

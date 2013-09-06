@@ -1,7 +1,7 @@
 {
     "name": "listplus",
     "title": "Listplus",
-    "description": "Adds multi value stable sorting, grouping/group header generation and multi-word filtering over an element's child nodes (usually applied to a ul, ol or div). The plugin does not change or style your dom elements except for creating group headings, nor does it keep track of ordering between render cycles meaning it plays nice with other code that may exist already on the list.",
+    "description": "Multi-sort, multi-filter and generate groups for an html list.",
     "keywords": [
         "ul",
         "li",
@@ -13,16 +13,16 @@
         "filter",
         "multi"
     ],
-    "version": "0.9.1",
+    "version": "1.0.0",
     "author": {
         "name": "Luke Sargeant",
-        "url": "http://github.com/lukesargeant"
+        "url": "http://lukesargeant.com"
     },
     "maintainers": [
         {
             "name": "Luke Sargeant",
             "email": "lukesarge@gmail.com",
-            "url": "http://github.com/lukesargeant"
+            "url": "http://lukesargeant.com"
         }
     ],
     "licenses": [
@@ -32,8 +32,8 @@
         }
     ],
     "bugs": "http://github.com/lukesargeant/listplus/issues",
-    "homepage": "http://lukesargeant.com/jquery/listplus/demo.html",
-    "docs": "http://lukesargeant.com/jquery/listplus/api-0.9.1.html",
+    "homepage": "http://lukesargeant.com/listplus/",
+    "docs": "http://lukesargeant.com/listplus/api-1.0.0.html",
     "dependencies": {
         "jquery": ">=1.9",
         "jqueryUI": ">=1.10"
